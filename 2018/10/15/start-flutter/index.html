@@ -27,7 +27,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="icon-home image-icon" href="javascript:;"></a>
     <div title="播放/暂停" class="icon-play"></div>
-    <h3 class="subtitle">外公外婆</h3>
+    <h3 class="subtitle">Flutter 开发环境搭建</h3>
     <div class="social">
         <!--<div class="like-icon">-->
             <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
@@ -44,22 +44,126 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">外公外婆</h1>
+        <h1 class="title">Flutter 开发环境搭建</h1>
         <div class="stuff">
-            <span>七月 23, 2018</span>
+            <span>十月 15, 2018</span>
             
-  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/亲人/">亲人</a></li></ul>
+  <ul class="post-tags-list"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/flutter/">flutter</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/js/">js</a></li></ul>
 
 
         </div>
         <div class="content markdown">
-            <p><img src="http://pc3xger4k.bkt.clouddn.com/waigongwaipo/DSC_9209.JPG" alt="外公外婆"></p>
-<p><img src="http://pc3xger4k.bkt.clouddn.com/waigongwaipo/DSC_9209.JPG" alt="外公外婆"></p>
-<p><img src="http://pc3xger4k.bkt.clouddn.com/waigongwaipo/DSC_9209.JPG" alt="外公外婆"></p>
+            <h3 id="获取Flutter-SDK"><a href="#获取Flutter-SDK" class="headerlink" title="获取Flutter SDK"></a>获取Flutter SDK</h3><p>不论是Windows、MacOS、Linux系统，统一采用Git方式下载，亲测试高效可用，这里下载开发版本，示例如下：</p>
+<p>在Flutter文件夹路径下，输入如下命令行代码，自动下载最新的代码。</p>
+<pre><code>git clone -b dev https://github.com/flutter/flutter.git
+</code></pre><h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><p>1、设置Flutter 系统环境变量</p>
+<pre><code>FLUTTER_HOME : \Flutter\flutter\bin
+
+Path下添加：FLUTTER_HOME\bin;
+</code></pre><p>2、添加临时镜像</p>
+<p>Flutter官方为中国开发者搭建了临时镜像，将其添加到用户环境变量中.</p>
+<pre>
+<code>
+    export PUB_HOSTED_URL=https://pub.flutter-io.cn
+    export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+</code>
+</pre>
+
+<p>3、执行命令检查安装情况：</p>
+<pre><code>flutter doctor
+</code></pre><p>4、修改flutter.gradle配置文件</p>
+<p>flutter.gradle 文件位于 flutter\packages\flutter_tools\gradle 目录下</p>
+<p>默认配置下，flutter调试运行时，Gradle下载依赖库失败的问题；通过修改flutter.gradle 文件，设置为阿里maven代理库就可以解决。</p>
+<p>设置如下：</p>
+<pre>
+<code>
+    buildscript {
+        repositories {
+            maven {
+                //url 'https://dl.google.com/dl/android/maven2'
+                url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            }
+            jcenter()
+        }
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.1.2'
+        }
+    }
+</code>
+</pre>
+
+<h3 id="安装开发编辑器"><a href="#安装开发编辑器" class="headerlink" title="安装开发编辑器"></a>安装开发编辑器</h3><p>这里推荐VS Code、Android Studio 和 Intellij Idea，用起来都比较顺手。但是Android Studio必须安装，用户创建Android模拟器，启动 Android Studio&gt;Tools&gt;Android&gt;AVD Manager 并选择 Create Virtual Device。</p>
+<h3 id="安装Flutter和Dart插件"><a href="#安装Flutter和Dart插件" class="headerlink" title="安装Flutter和Dart插件"></a>安装Flutter和Dart插件</h3><p>安装好开发编辑器后，接着安装Dart和Flutter插件，这里要先安装Dart插件。</p>
+<p>其中对于Intellij Idea 和 Android Studio 开发编辑器，需要去官网下载对应版本的插件到本地手动安装，安装好后，重启即可生效。在线下载容易失败。</p>
+<h3 id="创建新应用"><a href="#创建新应用" class="headerlink" title="创建新应用"></a>创建新应用</h3><p>按照以上步骤安装设置好，就可以创建新应用 New Flutter Project。</p>
+<h3 id="修改Flutter项目中android-对应的build-gradle配置文件"><a href="#修改Flutter项目中android-对应的build-gradle配置文件" class="headerlink" title="修改Flutter项目中android 对应的build.gradle配置文件"></a>修改Flutter项目中android 对应的build.gradle配置文件</h3><p>build.gradle配置文件的默认内容如下：</p>
+<pre>
+<code>
+    buildscript {
+        repositories {
+            google()
+            jcenter()
+        }
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.1.2'
+        }
+    }
+
+    allprojects {
+        repositories {
+            google()
+            jcenter()
+        }
+    }
+
+    rootProject.buildDir = '../build'
+    subprojects {
+        project.buildDir = "${rootProject.buildDir}/${project.name}"
+    }
+    subprojects {
+        project.evaluationDependsOn(':app')
+    }
+
+    task clean(type: Delete) {
+        delete rootProject.buildDir
+    }
+</code>
+</pre>
+
+<p>修改其中的buildscript =&gt; repositories {} , 添加: </p>
+<pre>
+<code>
+    maven {
+        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+    }
+</code>
+</pre>
+
+<p>修改结果如下： </p>
+<pre>
+<code>
+    buildscript {
+        repositories {
+            google()
+            maven {
+                url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            }
+            jcenter()
+        }
+
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.1.2'
+        }
+    }
+</code>
+</pre>
+
+<p>注意：必须将maven() 仓库 置于 jcenter() 之前，否则flutter调试运行时 依赖库下载失败。</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
-                <source type="audio/mpeg" src="http://music.163.com/song/media/outer/url?id=28613416.mp3">
+                <source type="audio/mpeg" src="http://music.163.com/song/media/outer/url?id=30089063.mp3">
             </audio>
         </div>
         
